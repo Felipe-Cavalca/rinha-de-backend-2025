@@ -19,6 +19,7 @@ x-service-templates:
 services:
 
   loadbalancer:
+    container_name: loadbalancer
     image: nginx:latest
     ports:
       - "9999:80"
@@ -37,9 +38,35 @@ services:
 
   api1:
     <<: *api
+    container_name: api1
 
   api2:
     <<: *api
+    container_name: api2
+
+  database:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    container_name: database
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      # Comentando volume para que o banco seja criado sempre que subir o container
+      # - database-data:/var/lib/postgresql/data
+      - ./database/src:/scripts/src # DEV
+      - ./database/install:/scripts/install # DEV
+      - ./database/update:/scripts/update # DEV
+      - ./database/update.sh:/scripts/update.sh # DEV
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: "100MB"
 
 networks:
   backend:
