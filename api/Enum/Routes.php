@@ -5,12 +5,6 @@ namespace Bifrost\Enum;
 Enum Routes: string
 {
 
-    /**
-     * Enumeração de rotas do sistema.
-     * Cada rota é definida como um caso do enum, representando o caminho da rota.
-     */
-    case login = "auth/login";
-    case logout = "auth/logout";
 
     /**
      * Método para obter o controlador associado a uma rota.
