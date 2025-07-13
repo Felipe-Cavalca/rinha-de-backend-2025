@@ -13,4 +13,9 @@ class Money
     {
         $this->init($value, Field::MONEY);
     }
+
+    public function getValue(): float
+    {
+        return $this->value;
+    }
 }
