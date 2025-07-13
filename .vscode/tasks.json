@@ -79,6 +79,19 @@
                 "-d"
             ],
             "group": { "kind": "build", "isDefault": true }
+        },
+
+        // Scripts do banco
+        {
+            "label": "database docker-compose up",
+            "type": "shell",
+            "command": "docker-compose",
+            "args": [
+                "database/docker-compose.yml",
+                "up",
+                "--build",
+                "-d"
+            ]
         }
     ]
 }
