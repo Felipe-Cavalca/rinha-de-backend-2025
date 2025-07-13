@@ -1,0 +1,35 @@
+x-service-templates:
+  api: &api
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev # DEV
+    env_file:
+      - .env
+    volumes:
+      - ./api:/var/www/html # DEV
+    networks:
+      - backend
+      - payment-processor
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: "50MB"
+
+services:
+
+  api:
+    <<: *api
+    ports:
+      - "81:80"
+
+  api2:
+    <<: *api
+    ports:
+      - "82:80"
+
+networks:
+  backend:
+    driver: bridge
+  payment-processor:
+    external: true
