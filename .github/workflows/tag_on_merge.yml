@@ -195,7 +195,7 @@ jobs:
 
       - name: Construir e Publicar Imagem Docker da API
         run: |
-          REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          REPO_NAME=$(echo "Felipe-Cavalca/rinha-de-backend-2025-api" | tr '[:upper:]' '[:lower:]')
 
           docker build -t ghcr.io/${REPO_NAME}:${TAG} -f api/Dockerfile api/
           docker tag ghcr.io/${REPO_NAME}:${TAG} ghcr.io/${REPO_NAME}:latest
