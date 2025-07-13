@@ -24,6 +24,7 @@ enum Field: string
     case FILE_PATH = 'File path';
     case JSON = 'JSON';
     case UUID = 'UUID';
+    case MONEY = 'Money';
 
     public function validate($val): bool
     {
@@ -44,6 +45,7 @@ enum Field: string
             self::FILE_PATH => is_string($val),
             self::JSON => json_decode($val) !== null,
             self::UUID => self::validateUUID($val),
+            self::MONEY => is_numeric($val) && $val >= 0,
             default => false,
         };
     }
