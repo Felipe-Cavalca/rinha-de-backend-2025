@@ -18,7 +18,7 @@ class Payment
      * @param UUID $id
      * @return array|null
      */
-    public static function get(UUID $id): ?array
+    public static function get(UUID $id): array
     {
         $cache = new Cache();
         $keyCache = Cache::buildCacheKey(entity: "payment", conditions: ["id" => (string) $id]);
@@ -26,19 +26,21 @@ class Payment
         $result = $cache->get($keyCache, function () use ($id) {
             $database = new Database();
             return $database->query(
+                select: "*",
                 from: "payments",
                 where: ["id" => (string) $id],
             );
         });
 
-        if (!empty($result)) {
-            foreach ($result as &$processor) {
-                $processor["id"] = new UUID($processor["id"]);
-                $processor["amount"] = new Money($processor["amount"]);
-                $processor["processed_by"] = $processor["processed_by"] ? new Processor(id: new UUID($processor["processed_by"])) : null;
-                $processor["processed_at"] = $processor["processed_at"] ? new DateTime($processor["processed_at"]) : null;
-            }
+        if($result === false){
+            return [];
         }
+
+        $result = $result[0];
+        $result["id"] = new UUID($result["id"]);
+        $result["amount"] = new Money($result["amount"]);
+        $result["processed_by"] = $result["processed_by"] ? new Processor(id: new UUID($result["processed_by"])) : null;
+        $result["processed_at"] = $result["processed_at"] ? new DateTime($result["processed_at"]) : null;
 
         return $result;
     }
@@ -56,8 +58,9 @@ class Payment
             into: "payments",
             insert: [
                 "id" => (string) $id,
-                "amount" => (float) $amount
+                "amount" => $amount->getValue()
             ],
+            returning: "id"
         );
 
         return new ClassPayment($id);
