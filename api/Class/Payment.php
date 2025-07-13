@@ -8,26 +8,44 @@ use Bifrost\Class\Processor;
 use Bifrost\DataTypes\DateTime;
 use Bifrost\Model\Payment as ModelPayment;
 
+/**
+ * @property UUID $id
+ * @property Money $amount
+ * @property Processor|null $processedBy
+ * @property DateTime|null $processedAt
+ */
 class Payment implements \JsonSerializable
 {
 
     public UUID $id;
-    public Money $amount;
-    public Processor|null $processedBy = null;
-    public DateTime|null $processedAt = null;
+    private array $data = [];
 
     public function __construct(UUID $id)
     {
         $this->id = $id;
     }
 
+    public function __get(string $name)
+    {
+        switch ($name) {
+            case 'id':
+                return $this->id;
+            default:
+                if (empty($this->data[$name])) {
+                    $this->data = ModelPayment::get($this->id);
+                }
+
+                return $this->data[$name] ?? null;
+        }
+    }
+
     public function toArray(): array
     {
         return [
             'id' => (string) $this->id,
-            'amount' => (float) $this->amount,
-            'processed_by' => $this->processedBy,
-            'processed_at' => $this->processedAt,
+            'amount' => $this->__get('amount')->getValue(),
+            'processed_by' => $this->__get('processedBy'),
+            'processed_at' => $this->__get('processedAt'),
         ];
     }
 
