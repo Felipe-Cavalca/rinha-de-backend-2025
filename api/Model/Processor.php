@@ -4,6 +4,7 @@ namespace Bifrost\Model;
 
 use Bifrost\Core\Cache;
 use Bifrost\Core\Database;
+use Bifrost\Core\Settings;
 use Bifrost\DataTypes\Tax;
 use Bifrost\DataTypes\Url;
 use Bifrost\DataTypes\UUID;
@@ -19,6 +20,7 @@ class Processor
     public static function get(UUID $id): ?array
     {
         $cache = new Cache();
+        $settings = new Settings();
         $keyCache = Cache::buildCacheKey(entity: 'processor', conditions: ["id" => (string) $id]);
 
         $result = $cache->get($keyCache, function () use ($id) {
@@ -27,7 +29,7 @@ class Processor
                 from: 'processors',
                 where: ['id' => (string) $id],
             );
-        });
+        }, $settings->CACHE_QUERY_TIME);
 
         if (!empty($result)) {
             foreach ($result as &$processor) {

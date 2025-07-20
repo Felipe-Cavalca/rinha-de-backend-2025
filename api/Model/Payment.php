@@ -6,6 +6,7 @@ use Bifrost\Class\Payment as ClassPayment;
 use Bifrost\Class\Processor;
 use Bifrost\Core\Cache;
 use Bifrost\Core\Database;
+use Bifrost\Core\Settings;
 use Bifrost\DataTypes\DateTime;
 use Bifrost\DataTypes\Money;
 use Bifrost\DataTypes\UUID;
@@ -21,6 +22,7 @@ class Payment
     public static function get(UUID $id): array
     {
         $cache = new Cache();
+        $settings = new Settings();
         $keyCache = Cache::buildCacheKey(entity: "payment", conditions: ["id" => (string) $id]);
 
         $result = $cache->get($keyCache, function () use ($id) {
@@ -30,7 +32,7 @@ class Payment
                 from: "payments",
                 where: ["id" => (string) $id],
             );
-        });
+        }, $settings->CACHE_QUERY_TIME);
 
         if($result === false){
             return [];
