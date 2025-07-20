@@ -14,7 +14,10 @@ x-service-templates:
       resources:
         limits:
           cpus: "0.2"
-          memory: "25MB"
+          memory: "250MB"
+    depends_on:
+      - database
+      - redis
 
 services:
 
@@ -67,6 +70,19 @@ services:
         limits:
           cpus: "0.1"
           memory: "100MB"
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: "50MB"
 
 networks:
   backend:
