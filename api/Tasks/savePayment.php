@@ -9,14 +9,10 @@ use Bifrost\Interface\TaskInterface;
 
 class savePayment implements TaskInterface
 {
-    private UUID $id;
-    private Money $amount;
-
-    public function __construct(UUID $id, Money $amount)
-    {
-        $this->id = $id;
-        $this->amount = $amount;
-    }
+    public function __construct(
+        private UUID $id,
+        private Money $amount,
+    ) {}
 
     public function __serialize(): array
     {
