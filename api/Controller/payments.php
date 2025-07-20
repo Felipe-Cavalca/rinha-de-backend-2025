@@ -9,10 +9,12 @@ use Bifrost\Class\HttpResponse;
 use Bifrost\Class\Payment;
 use Bifrost\Core\Database;
 use Bifrost\Core\Post;
+use Bifrost\Core\Queue;
 use Bifrost\DataTypes\Money;
 use Bifrost\DataTypes\UUID;
 use Bifrost\Enum\Field;
 use Bifrost\Interface\ControllerInterface;
+use Bifrost\Tasks\savePayment;
 
 class Payments implements ControllerInterface
 {
@@ -27,14 +29,19 @@ class Payments implements ControllerInterface
     ])]
     public function index(): HttpResponse
     {
+        $queue = new Queue();
         $post = new Post();
         $id = new UUID(value: $post->correlationId);
         $amount = new Money(value: $post->amount);
-        $payment = Payment::new(id: $id, amount: $amount);
+        $savePaymentTask = new savePayment(id: $id, amount: $amount);
+        $queue->addToEnd(task: $savePaymentTask);
 
         return HttpResponse::created(
             objName: "payment",
-            data: $payment->toArray()
+            data: [
+                "id" => (string) $id,
+                "amount" => $amount->getValue(),
+            ]
         );
     }
 }
