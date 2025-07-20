@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS processors (
     url VARCHAR(255) DEFAULT NULL
 );
 
+SELECT create_log_trigger('processors');
+
 INSERT INTO processors (id, name, tax, url) VALUES
     ('00000000-0000-0000-0000-000000000001', 'Processor Default', 0.05, 'http://payment-processor-default:8001'),
     ('00000000-0000-0000-0000-000000000002', 'Processor Fallback', 0.15, 'http://payment-processor-fallback:8002');
