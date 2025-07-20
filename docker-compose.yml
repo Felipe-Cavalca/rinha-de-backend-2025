@@ -2,7 +2,7 @@ x-service-templates:
   api: &api
     build:
       context: ./api
-      dockerfile: Dockerfile.dev # DEV
+      dockerfile: Dockerfile # DEV
     env_file:
       - .env
     volumes:
@@ -14,7 +14,7 @@ x-service-templates:
     deploy:
       resources:
         limits:
-          cpus: "0.4"
+          cpus: "0.5"
           memory: "100MB"
     depends_on:
       - database
@@ -35,7 +35,7 @@ services:
       resources:
         limits:
           cpus: "0.1"
-          memory: "50MB"
+          memory: "10MB"
     depends_on:
       - api1
       - api2
@@ -69,8 +69,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.3"
-          memory: "50MB"
+          cpus: "0.2"
+          memory: "70MB"
 
   redis:
     image: redis:alpine3.20
@@ -82,8 +82,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.3"
-          memory: "50MB"
+          cpus: "0.2"
+          memory: "70MB"
 
 networks:
   backend:
