@@ -4,3 +4,5 @@ CREATE TABLE IF NOT EXISTS payments (
     processed_by UUID REFERENCES processors (id) ON DELETE RESTRICT DEFAULT NULL,
     processed_at TIMESTAMPTZ DEFAULT NULL
 );
+
+SELECT create_log_trigger('payments');
