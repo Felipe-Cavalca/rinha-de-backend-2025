@@ -30,7 +30,12 @@ class savePayment implements TaskInterface
 
     public function run(): bool
     {
-        Payment::new(id: $this->id, amount: $this->amount);
+        try {
+            Payment::new(id: $this->id, amount: $this->amount);
+        } catch (\Exception $e) {
+            // Handle the exception, log it, or rethrow it as needed
+            error_log("Failed to save payment: " . $e->getMessage());
+        }
         return true;
     }
 }
