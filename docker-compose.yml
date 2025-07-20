@@ -7,14 +7,15 @@ x-service-templates:
       - .env
     volumes:
       - ./api:/var/www/html # DEV
+      - ./tmp:/var/log/xdebug # DEV
     networks:
       - backend
       - payment-processor
     deploy:
       resources:
         limits:
-          cpus: "0.2"
-          memory: "250MB"
+          cpus: "0.4"
+          memory: "100MB"
     depends_on:
       - database
       - redis
@@ -34,7 +35,7 @@ services:
       resources:
         limits:
           cpus: "0.1"
-          memory: "10MB"
+          memory: "50MB"
     depends_on:
       - api1
       - api2
@@ -68,8 +69,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.1"
-          memory: "100MB"
+          cpus: "0.3"
+          memory: "50MB"
 
   redis:
     image: redis:alpine3.20
@@ -81,7 +82,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: "0.3"
           memory: "50MB"
 
 networks:
